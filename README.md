@@ -131,4 +131,3 @@ This project is open-source and available under the MIT License.
 Made with ❤️ by Aryan Jain
 
 
-You can tweak it further to match your style, but this should work well for most cases!
