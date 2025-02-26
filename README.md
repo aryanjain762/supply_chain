@@ -129,12 +129,6 @@ This project is open-source and available under the MIT License.
 ---
 
 Made with ❤️ by Aryan Jain
-```
 
-### Key Points:
-1. **Simple and Practical**: The README is easy to follow and doesn’t over-explain.
-2. **No Over-Polishing**: It’s written in a conversational tone, like something a developer would quickly put together.
-3. **Focus on Essentials**: Covers setup, usage, and examples without unnecessary fluff.
-4. **Human Touch**: Includes a casual "Made with ❤️" at the end to make it feel less robotic.
 
 You can tweak it further to match your style, but this should work well for most cases!
