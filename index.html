@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supply Chain Optimizer</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-blue-800 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Supply Chain Optimizer</h1>
+            <ul class="flex space-x-4">
+                <li><a href="#transportation" class="hover:text-blue-200">Transportation</a></li>
+                <li><a href="#production" class="hover:text-blue-200">Production</a></li>
+                <li><a href="#decision-support" class="hover:text-blue-200">Decision Support</a></li>
+                <li><a href="#insights" class="hover:text-blue-200">Insights</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Transportation Optimization Section -->
+        <section id="transportation" class="mb-12">
+            <h2 class="text-2xl font-bold text-blue-800 mb-6">Transportation Optimization</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <form id="transportForm">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Origin Locations (comma-separated):</label>
+                            <input type="text" id="origins" class="w-full border rounded p-2" placeholder="New York, Chicago, Miami">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Destination Locations:</label>
+                            <input type="text" id="destinations" class="w-full border rounded p-2" placeholder="Dallas, Phoenix, Seattle">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Shipment Volumes:</label>
+                            <input type="text" id="volumes" class="w-full border rounded p-2" placeholder="5000, 3000, 2500">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Constraints:</label>
+                            <textarea id="constraints" class="w-full border rounded p-2" rows="2" placeholder="Must deliver within 3 days, temperature controlled"></textarea>
+                        </div>
+                        <button type="button" onclick="optimizeTransportation()" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Optimize</button>
+                    </form>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-700">Optimization Results</h3>
+                    <div id="transportResults" class="mt-4 p-4 bg-gray-50 rounded"></div>
+                    <canvas id="transportChart" class="mt-4"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Production Planning Section -->
+        <section id="production" class="mb-12">
+            <h2 class="text-2xl font-bold text-blue-800 mb-6">Production Planning</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <form id="productionForm">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Products (comma-separated):</label>
+                            <input type="text" id="products" class="w-full border rounded p-2" placeholder="Widget A, Widget B, Widget C">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Demand Forecast (units):</label>
+                            <input type="text" id="demand" class="w-full border rounded p-2" placeholder="1000, 2000, 1500">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Production Capacity:</label>
+                            <textarea id="capacity" class="w-full border rounded p-2" rows="2" placeholder="Widget A: 500/day, Widget B: 700/day, Widget C: 400/day"></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Lead Times (days):</label>
+                            <textarea id="leadTimes" class="w-full border rounded p-2" rows="2" placeholder="Widget A: 3, Widget B: 5, Widget C: 2"></textarea>
+                        </div>
+                        <button type="button" onclick="planProduction()" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Plan</button>
+                    </form>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-700">Production Schedule</h3>
+                    <div id="productionResults" class="mt-4 p-4 bg-gray-50 rounded"></div>
+                    <canvas id="productionChart" class="mt-4"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Decision Support Section -->
+        <section id="decision-support" class="mb-12">
+            <h2 class="text-2xl font-bold text-blue-800 mb-6">Decision Support</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <form id="decisionForm">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Your Supply Chain Question:</label>
+                            <textarea id="question" class="w-full border rounded p-2" rows="3" placeholder="Should we add another distribution center in the Midwest?"></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Context (optional):</label>
+                            <textarea id="context" class="w-full border rounded p-2" rows="4" placeholder="Current DC locations: East Coast, West Coast
+Annual volume: 1.2M units
+Current delivery times: 3-5 days"></textarea>
+                        </div>
+                        <button type="button" onclick="getDecisionSupport()" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Get Advice</button>
+                    </form>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-700">Recommendation</h3>
+                    <div id="decisionResults" class="mt-4 p-4 bg-gray-50 rounded"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Insights Section -->
+        <section id="insights">
+            <h2 class="text-2xl font-bold text-blue-800 mb-6">Recent Insights</h2>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div id="recentInsights" class="space-y-4">
+                    <p class="text-gray-500 italic">Your optimization insights will appear here...</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000/api';
+
+        // Initialize charts
+        const transportChartCtx = document.getElementById('transportChart').getContext('2d');
+        const productionChartCtx = document.getElementById('productionChart').getContext('2d');
+
+        let transportChart = new Chart(transportChartCtx, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Cost Savings',
+                    data: [],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        let productionChart = new Chart(productionChartCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Production Volume',
+                    data: [],
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Transportation Optimization Function
+        async function optimizeTransportation() {
+            const origins = document.getElementById('origins').value.split(',').map(item => item.trim());
+            const destinations = document.getElementById('destinations').value.split(',').map(item => item.trim());
+            const volumes = document.getElementById('volumes').value.split(',').map(item => parseInt(item.trim()));
+            const constraints = document.getElementById('constraints').value;
+
+            try {
+                const response = await axios.post(`${API_BASE_URL}/optimize-transportation`, {
+                    origins,
+                    destinations,
+                    volumes,
+                    constraints
+                });
+
+                displayResults('transportResults', response.data.recommendations);
+                addInsight('Transportation Optimization', response.data.recommendations);
+
+                // Update chart data
+                const chartData = await axios.post(`${API_BASE_URL}/chart-data`, { origins, destinations, volumes });
+                transportChart.data.labels = chartData.data.labels;
+                transportChart.data.datasets[0].data = chartData.data.datasets[0].data;
+                transportChart.update();
+            } catch (error) {
+                console.error('Error:', error);
+                displayResults('transportResults', 'An error occurred. Please try again.');
+            }
+        }
+
+        // Production Planning Function
+        async function planProduction() {
+            const products = document.getElementById('products').value.split(',').map(item => item.trim());
+            const demand = document.getElementById('demand').value.split(',').map(item => parseInt(item.trim()));
+            const capacityText = document.getElementById('capacity').value;
+            const leadTimesText = document.getElementById('leadTimes').value;
+
+            // Parse capacity and lead times from text
+            const capacity = {};
+            const lead_times = {};
+
+            capacityText.split(',').forEach(item => {
+                const [product, cap] = item.split(':').map(i => i.trim());
+                capacity[product] = cap;
+            });
+
+            leadTimesText.split(',').forEach(item => {
+                const [product, time] = item.split(':').map(i => i.trim());
+                lead_times[product] = parseInt(time);
+            });
+
+            try {
+                const response = await axios.post(`${API_BASE_URL}/production-planning`, {
+                    products,
+                    demand,
+                    capacity,
+                    lead_times
+                });
+
+                displayResults('productionResults', response.data.plan);
+                addInsight('Production Planning', response.data.plan);
+
+                // Update chart data
+                const chartData = await axios.post(`${API_BASE_URL}/chart-data`, { products, demand });
+                productionChart.data.labels = chartData.data.labels;
+                productionChart.data.datasets[0].data = chartData.data.datasets[0].data;
+                productionChart.update();
+            } catch (error) {
+                console.error('Error:', error);
+                displayResults('productionResults', 'An error occurred. Please try again.');
+            }
+        }
+
+        // Decision Support Function
+        async function getDecisionSupport() {
+            const question = document.getElementById('question').value;
+            const contextText = document.getElementById('context').value;
+
+            // Parse context from text
+            const contextLines = contextText.split('\n');
+            const context = {};
+
+            contextLines.forEach(line => {
+                if (line.includes(':')) {
+                    const [key, value] = line.split(':').map(i => i.trim());
+                    context[key] = value;
+                } else {
+                    context[`info_${Object.keys(context).length}`] = line.trim();
+                }
+            });
+
+            try {
+                const response = await axios.post(`${API_BASE_URL}/decision-support`, {
+                    question,
+                    context
+                });
+
+                displayResults('decisionResults', response.data.recommendation);
+                addInsight('Decision Support', response.data.recommendation);
+            } catch (error) {
+                console.error('Error:', error);
+                displayResults('decisionResults', 'An error occurred. Please try again.');
+            }
+        }
+
+        // Helper function to display results
+        function displayResults(elementId, results) {
+            const resultsDiv = document.getElementById(elementId);
+            resultsDiv.innerHTML = formatResults(results);
+            resultsDiv.classList.remove('hidden');
+        }
+
+        // Helper function to format results with basic markdown-like parsing
+        function formatResults(text) {
+            // Convert numbered lists
+            text = text.replace(/^\d+\.\s(.+)$/gm, '<li>$1</li>');
+
+            // Add paragraph breaks
+            text = text.replace(/\n\n/g, '</p><p>');
+
+            // Bold important text
+            text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+            return `<p>${text}</p>`;
+        }
+
+        // Add insight to recent insights section
+        function addInsight(type, content) {
+            const insightDiv = document.getElementById('recentInsights');
+
+            // Clear placeholder if it exists
+            if (insightDiv.innerHTML.includes('insights will appear here')) {
+                insightDiv.innerHTML = '';
+            }
+
+            // Create a summary (first 100 characters)
+            const summary = content.substring(0, 100) + (content.length > 100 ? '...' : '');
+
+            // Create timestamp
+            const timestamp = new Date().toLocaleString();
+
+            // Add new insight
+            const newInsight = document.createElement('div');
+            newInsight.className = 'p-3 bg-gray-50 rounded';
+            newInsight.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <span class="font-medium text-blue-700">${type}</span>
+                    <span class="text-xs text-gray-500">${timestamp}</span>
+                </div>
+                <p class="mt-1 text-gray-700">${summary}</p>
+            `;
+
+            // Add to insights container (at the top)
+            insightDiv.insertBefore(newInsight, insightDiv.firstChild);
+
+            // Limit to 5 insights
+            if (insightDiv.children.length > 5) {
+                insightDiv.removeChild(insightDiv.lastChild);
+            }
+        }
+    </script>
+</body>
+</html>
